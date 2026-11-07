@@ -1,0 +1,21 @@
+version: 2
+
+sources:
+  - name: tpch
+    database: MARTFORGE_RAW
+    schema: TPCH
+    loaded_at_field: _LOADED_AT
+    freshness:
+      warn_after: {count: 24, period: hour}
+      error_after: {count: 48, period: hour}
+    tables:
+      - name: customers
+        identifier: CUSTOMERS
+      - name: orders
+        identifier: ORDERS
+      - name: lineitem
+        identifier: LINEITEM
+      - name: supplier
+        identifier: SUPPLIER
+      - name: nation
+        identifier: NATION

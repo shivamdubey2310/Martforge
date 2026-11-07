@@ -1,0 +1,60 @@
+name: dbt Slim CI
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'martforge_dbt/**'
+
+jobs:
+  slim_ci:
+    name: Run dbt Slim CI
+    runs-on: ubuntu-latest
+
+    env:
+      SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+      SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+      SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+      SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
+      SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+      DBT_PROFILES_DIR: ./martforge_dbt
+
+    steps:
+      - name: Check out PR code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Install dbt packages
+        working-directory: ./martforge_dbt
+        run: dbt deps
+
+      - name: Check out main branch to compile reference manifest
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main_branch
+
+      - name: Build reference manifest from main
+        working-directory: ./main_branch/martforge_dbt
+        run: |
+          cp ../../martforge_dbt/profiles_ci.yml ./profiles_ci.yml
+          dbt compile --profiles-dir . --target ci
+          mkdir -p ../../state
+          cp target/manifest.json ../../state/manifest.json
+
+      - name: Run Slim CI (Modified Models & Tests Only)
+        working-directory: ./martforge_dbt
+        run: |
+          cp profiles_ci.yml profiles.yml
+          dbt build --target ci --select state:modified+ --defer --state ../state

@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: stg_tpch_orders
+    description: "Cleansed and standardized orders from TPC-H"
+    columns:
+      - name: order_id
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        tests:
+          - not_null
+      - name: order_status_code
+        tests:
+          - accepted_values:
+              values: ['O', 'F', 'P']
+      - name: total_order_amount
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0

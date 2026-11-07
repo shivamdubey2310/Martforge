@@ -1,0 +1,50 @@
+version: 2
+
+models:
+  - name: fct_orders
+    description: "Order-level grain fact table containing summarized metrics"
+    columns:
+      - name: order_id
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customers')
+              field: customer_id
+      - name: gross_sales_amount
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+
+  - name: dim_customers
+    description: "Conformed dimension table representing customers with geographic data"
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: customer_id
+        data_type: number(38,0)
+        description: "Primary key for customers"
+        tests:
+          - unique
+          - not_null
+      - name: customer_name
+        data_type: varchar(25)
+        tests:
+          - not_null
+      - name: address
+        data_type: varchar(40)
+      - name: nation_name
+        data_type: varchar(25)
+      - name: phone_number
+        data_type: varchar(15)
+      - name: account_balance
+        data_type: number(12,2)
+      - name: market_segment
+        data_type: varchar(10)
+      - name: customer_comment
+        data_type: varchar(117)
