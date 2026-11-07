@@ -1,0 +1,47 @@
+[0m16:35:32.742874 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7f6d4f4cd2b0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7f6d4df4fed0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7f6d4df4fb10>]}
+
+
+============================== 16:35:32.751835 | 159b515c-0404-46f4-8819-5b11dad54f0d ==============================
+[0m16:35:32.751835 [info ] [MainThread]: Running with dbt=1.12.6
+[0m16:35:32.753189 [debug] [MainThread]: running dbt with arguments {'partial_parse': 'True', 'introspect': 'True', 'target_path': 'None', 'indirect_selection': 'eager', 'version_check': 'True', 'use_experimental_parser': 'False', 'debug': 'False', 'maximum_seed_size_mib': '1', 'profiles_dir': '/home/shiva/.dbt', 'log_cache_events': 'False', 'fail_fast': 'False', 'warn_error': 'None', 'send_anonymous_usage_stats': 'True', 'quiet': 'False', 'printer_width': '80', 'invocation_command': 'dbt init martforge_dbt', 'log_format': 'default', 'hints_enabled': 'True', 'log_path': 'logs', 'empty': 'None', 'write_json': 'True', 'static_parser': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'cache_selected_only': 'False', 'no_print': 'None', 'use_colors': 'True'}
+[0m16:35:32.813919 [debug] [MainThread]: Starter project path: /run/media/shiva/New Volume D/Codddddddddeeeeeee/Martforge/venv/lib64/python3.13/site-packages/dbt/include/starter_project
+[0m16:35:32.844697 [info ] [MainThread]: Setting up your profile.
+[0m16:36:10.154093 [error] [MainThread]: [[31mERROR[0m]: Encountered an error:
+
+[0m16:36:10.162743 [error] [MainThread]: Traceback (most recent call last):
+  File "/run/media/shiva/New Volume D/Codddddddddeeeeeee/Martforge/venv/lib64/python3.13/site-packages/dbt/cli/requires.py", line 198, in wrapper
+    result, success = func(*args, **kwargs)
+                      ~~~~^^^^^^^^^^^^^^^^^
+  File "/run/media/shiva/New Volume D/Codddddddddeeeeeee/Martforge/venv/lib64/python3.13/site-packages/dbt/cli/requires.py", line 144, in wrapper
+    return func(*args, **kwargs)
+  File "/run/media/shiva/New Volume D/Codddddddddeeeeeee/Martforge/venv/lib64/python3.13/site-packages/dbt/cli/main.py", line 504, in init
+    results = task.run()
+  File "/run/media/shiva/New Volume D/Codddddddddeeeeeee/Martforge/venv/lib64/python3.13/site-packages/dbt/task/init.py", line 363, in run
+    self.setup_profile(profile_name)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/run/media/shiva/New Volume D/Codddddddddeeeeeee/Martforge/venv/lib64/python3.13/site-packages/dbt/task/init.py", line 265, in setup_profile
+    self.create_profile_from_target(adapter, profile_name=profile_name)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/shiva/New Volume D/Codddddddddeeeeeee/Martforge/venv/lib64/python3.13/site-packages/dbt/task/init.py", line 182, in create_profile_from_target
+    self.create_profile_from_profile_template(profile_template, profile_name)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/run/media/shiva/New Volume D/Codddddddddeeeeeee/Martforge/venv/lib64/python3.13/site-packages/dbt/task/init.py", line 166, in create_profile_from_profile_template
+    target = self.generate_target_from_input(prompts, initial_target)
+  File "/run/media/shiva/New Volume D/Codddddddddeeeeeee/Martforge/venv/lib64/python3.13/site-packages/dbt/task/init.py", line 132, in generate_target_from_input
+    target[key] = click.prompt(
+                  ~~~~~~~~~~~~^
+        text, default=default, hide_input=hide_input, type=type
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/run/media/shiva/New Volume D/Codddddddddeeeeeee/Martforge/venv/lib64/python3.13/site-packages/click/termui.py", line 262, in prompt
+    value = prompt_func(prompt)
+  File "/run/media/shiva/New Volume D/Codddddddddeeeeeee/Martforge/venv/lib64/python3.13/site-packages/click/termui.py", line 245, in prompt_func
+    raise Abort() from None
+click.exceptions.Abort
+
+[0m16:36:10.166495 [debug] [MainThread]: Resource report: {"command_name": "init", "command_success": false, "command_wall_clock_time": 37.603146, "process_in_blocks": "17848", "process_kernel_time": 1.194651, "process_mem_max_rss": "184392", "process_out_blocks": "16", "process_user_time": 5.096697}
+[0m16:36:10.168511 [debug] [MainThread]: Command `dbt init` failed at 16:36:10.168239 after 37.61 seconds
+[0m16:36:10.169596 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7f6d29fccc30>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7f6d29f76f90>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7f6d29f4b680>]}
+[0m16:36:10.170753 [debug] [MainThread]: Flushing usage events
+[0m16:36:11.777899 [debug] [MainThread]: An error was encountered while trying to flush usage events
