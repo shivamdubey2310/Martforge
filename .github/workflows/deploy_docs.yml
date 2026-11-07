@@ -1,0 +1,78 @@
+name: Deploy dbt Docs to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'martforge_dbt/**'
+  workflow_dispatch: # Allows manual trigger from the Actions UI
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+
+    env:
+      SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+      SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+      SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+      SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
+      SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+      PR_NUMBER: "PROD"
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Install dbt dependencies
+        working-directory: ./martforge_dbt
+        run: dbt deps
+
+      - name: Setup profile
+        working-directory: ./martforge_dbt
+        run: cp profiles_ci.yml profiles.yml
+
+      - name: Generate dbt documentation
+        working-directory: ./martforge_dbt
+        run: |
+          dbt docs generate --profiles-dir . --target ci
+
+      - name: Prepare site directory
+        run: |
+          mkdir -p site
+          # Copy the core dbt documentation single-page assets
+          cp martforge_dbt/target/index.html site/index.html
+          cp martforge_dbt/target/manifest.json site/manifest.json
+          cp martforge_dbt/target/catalog.json site/catalog.json
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './site'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
