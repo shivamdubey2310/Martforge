@@ -21,4 +21,3 @@ martforge_dbt/logs/
 # My guides
 project_06_martforge.md
 project_06_martforge_metrics.md
-snowflake_queries.sql
