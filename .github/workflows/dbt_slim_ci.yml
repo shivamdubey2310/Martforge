@@ -58,3 +58,4 @@ jobs:
         run: |
           cp profiles_ci.yml profiles.yml
           dbt build --target ci --select state:modified+ --defer --state ../state
+          
