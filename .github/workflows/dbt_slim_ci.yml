@@ -18,7 +18,6 @@ jobs:
       SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
       SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
       PR_NUMBER: ${{ github.event.pull_request.number }}
-      DBT_PROFILES_DIR: ./martforge_dbt
 
     steps:
       - name: Check out PR code
@@ -39,23 +38,11 @@ jobs:
         working-directory: ./martforge_dbt
         run: dbt deps
 
-      - name: Check out main branch to compile reference manifest
-        uses: actions/checkout@v4
-        with:
-          ref: main
-          path: main_branch
-
-      - name: Build reference manifest from main
-        working-directory: ./main_branch/martforge_dbt
-        run: |
-          cp ../../martforge_dbt/profiles_ci.yml ./profiles_ci.yml
-          dbt compile --profiles-dir . --target ci
-          mkdir -p ../../state
-          cp target/manifest.json ../../state/manifest.json
+      - name: Setup CI Profile
+        working-directory: ./martforge_dbt
+        run: cp profiles_ci.yml profiles.yml
 
       - name: Run Slim CI (Modified Models & Tests Only)
         working-directory: ./martforge_dbt
         run: |
-          cp profiles_ci.yml profiles.yml
-          dbt build --target ci --select state:modified+ --defer --state ../state
-          
+          dbt build --profiles-dir . --target ci --select state:modified+ --defer --state ../dbt_state
