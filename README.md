@@ -6,6 +6,8 @@
 
 An enterprise-grade ELT platform transforming **7.5M+ rows** of raw TPC-H transactional data in **Snowflake** using **dbt Core**, dimensional star-schema modeling, **enforced model contracts**, automated data testing, and **GitHub Actions Slim CI/CD** with state deferral.
 
+> Live dbt docs : [Live Doc](https://shivamdubey2310.github.io/Martforge/#!/overview)
+
 ---
 
 ## Architecture Overview
@@ -203,3 +205,5 @@ tpch.nation ──────▶ stg_tpch_nations ───────┴─�
 ## License
 
 This project is licensed under the MIT License — see the [LICENSE](https://www.google.com/search?q=LICENSE) file for details.
+
+---
