@@ -12,30 +12,7 @@ An enterprise-grade ELT platform transforming **7.5M+ rows** of raw TPC-H transa
 
 ## Architecture Overview
 
-```text
- ┌──────────────────────┐  EL / CTAS  ┌──────────────────────────────────────────┐
- │ Snowflake Samples    │────────────▶│ MARTFORGE_RAW.TPCH                       │
- │ (TPC-H SF1 Bench)    │             │  • customers, orders, lineitem, etc.     │
- └──────────────────────┘             └────────────────────┬─────────────────────┘
-                                                           │ dbt build
-                                      ┌────────────────────▼─────────────────────┐
-                                      │ MARTFORGE_ANALYTICS (dbt Layer)          │
-                                      │  • Staging (Views, surrogate keys)       │
-                                      │  • Intermediate (Denormalized views)     │
-                                      │  • Snapshots (SCD Type 2 tracking)       │
-                                      │  • Marts (Fact/Dim tables, Incremental)  │
-                                      └────────────────────┬─────────────────────┘
-                                                           │
-                                ┌──────────────────────────┼──────────────────────────┐
-                                ▼                          ▼                          ▼
-                     ┌──────────────────────┐   ┌──────────────────────┐   ┌──────────────────────┐
-                     │ Data Governance      │   │ CI/CD Pipeline       │   │ Interactive Docs     │
-                     │  • Enforced Contracts│   │  • GitHub Actions    │   │  • GitHub Pages      │
-                     │  • Schema validation │   │  • State deferral    │   │  • Full DAG lineage  │
-                     │  • Generic + Exp tests│  │  • Slim CI build     │   │    graph preview     │
-                     └──────────────────────┘   └──────────────────────┘   └──────────────────────┘
-
-```
+![Architecture](diagram/Martforge.png)
 
 ---
 
